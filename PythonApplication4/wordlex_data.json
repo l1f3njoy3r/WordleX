@@ -1,0 +1,188 @@
+{
+  "dark_mode": false,
+  "user_lists": {
+    "Fruits": [
+      "APPLE",
+      "MANGO",
+      "GRAPE",
+      "PEACH",
+      "LEMON",
+      "MELON",
+      "BERRY",
+      "GUAVA",
+      "PRUNE",
+      "OLIVE"
+    ],
+    "Vegies": [
+      "ONION",
+      "CHARD",
+      "MAIZE",
+      "BASIL",
+      "PUNCH",
+      "GOURD",
+      "SALAD",
+      "BEANS",
+      "BEETS",
+      "PEASE",
+      "CORNS",
+      "DILLS",
+      "ROOTS",
+      "BULBS",
+      "LEEKS",
+      "SWEDE",
+      "CHILI"
+    ],
+    "test": [
+      "CREAM",
+      "POUND",
+      "FIGHT"
+    ],
+    "unique": [
+      "TABLE",
+      "STOOL",
+      "CHAIR",
+      "SOFAS",
+      "DESKS",
+      "BOARD"
+    ],
+    "test_123": [
+      "CREAM",
+      "POUND",
+      "FIGHT",
+      "SIGHT"
+    ]
+  },
+  "selected_user_lists": [
+    "test"
+  ],
+  "statistics": {
+    "overall": {
+      "played": 51,
+      "wins": 48,
+      "current_streak": 34,
+      "max_streak": 34,
+      "guess_distribution": {
+        "1": 17,
+        "2": 11,
+        "3": 10,
+        "4": 6,
+        "5": 3,
+        "6": 1
+      }
+    },
+    "default": {
+      "played": 46,
+      "wins": 43,
+      "current_streak": 29,
+      "max_streak": 29,
+      "guess_distribution": {
+        "1": 13,
+        "2": 11,
+        "3": 9,
+        "4": 6,
+        "5": 3,
+        "6": 1
+      }
+    },
+    "user_configs": {
+      "test": {
+        "played": 4,
+        "wins": 4,
+        "current_streak": 4,
+        "max_streak": 4,
+        "guess_distribution": {
+          "1": 3,
+          "2": 0,
+          "3": 1,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        }
+      },
+      "test + test_123 + unique": {
+        "played": 1,
+        "wins": 1,
+        "current_streak": 1,
+        "max_streak": 1,
+        "guess_distribution": {
+          "1": 1,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        }
+      },
+      "unique": {
+        "played": 1,
+        "wins": 1,
+        "current_streak": 1,
+        "max_streak": 1,
+        "guess_distribution": {
+          "1": 1,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        }
+      },
+      "test_123": {
+        "played": 1,
+        "wins": 1,
+        "current_streak": 1,
+        "max_streak": 1,
+        "guess_distribution": {
+          "1": 1,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        }
+      },
+      "q": {
+        "played": 1,
+        "wins": 1,
+        "current_streak": 1,
+        "max_streak": 1,
+        "guess_distribution": {
+          "1": 1,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        }
+      },
+      "test + \u0439": {
+        "played": 1,
+        "wins": 1,
+        "current_streak": 1,
+        "max_streak": 1,
+        "guess_distribution": {
+          "1": 1,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        }
+      },
+      "\u0439": {
+        "played": 1,
+        "wins": 1,
+        "current_streak": 1,
+        "max_streak": 1,
+        "guess_distribution": {
+          "1": 1,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        }
+      }
+    }
+  }
+}
