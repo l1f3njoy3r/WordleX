@@ -122,17 +122,216 @@ BUILTIN_WORDS = list(set(w.lower() for w in BUILTIN_WORDS if len(w) == 5))
 
 SAVE_FILE = "wordlex_data.json"
 
-ENCOURAGING_WORDS = {
-    1: "Brilliant! 🧠",
-    2: "Magnificent! ✨",
-    3: "Impressive! 🎯",
-    4: "Splendid! 👏",
-    5: "Great Job! 💪",
-    6: "Phew! Close one! 😅",
+
+TRANSLATIONS = {
+    "en": {
+        "title": "WordleX",
+        "rules": "Rules",
+        "rules_title": "How To Play",
+        "rules_text": (
+            "Guess the word in 6 tries.\n\n"
+            "• Each guess must be a valid 5-letter English word.\n"
+            "• Press ENTER to submit your guess.\n\n"
+            "After each guess, the color of the tiles will\n"
+            "change to show how close your guess was:\n"
+        ),
+        "rules_green": "Green — Correct letter, correct spot",
+        "rules_yellow": "Yellow — Correct letter, wrong spot",
+        "rules_gray": "Gray — Letter not in the word",
+        "rules_modes_title": "Game Modes:",
+        "rules_modes_text": (
+            "• Default Mode — Random words from built-in list\n"
+            "• User Mode — Your custom word lists for learning\n"
+            "  vocabulary! Create multiple lists and switch\n"
+            "  between them."
+        ),
+        "default_mode": "Default Mode",
+        "user_mode": "User Mode",
+        "lists": "Lists",
+        "statistics": "Statistics",
+        "view": "View:",
+        "overall": "Overall",
+        "default_mode_stats": "Default Mode",
+        "list_prefix": "List:",
+        "lists_prefix": "Lists:",
+        "archived_list": "Archived statistics: Deleted List:",
+        "archived_lists": "Archived statistics: Deleted Lists:",
+        "delete_stat": "🗑️ Delete this statistic",
+        "played": "Played",
+        "win_pct": "Win %",
+        "current_streak": "Current\nStreak",
+        "max_streak": "Max\nStreak",
+        "guess_distribution": "Guess Distribution",
+        "no_games": "No games played yet in this configuration.",
+        "you_won": "YOU WON! 🎉",
+        "you_lost": "YOU LOST 😢",
+        "word_was": "The word was:",
+        "mode_label": "Mode:",
+        "mode_default": "Default",
+        "mode_user": "User",
+        "words_suffix": "words",
+        "definition": "Definition:",
+        "definition_loading": "Definition: Loading...",
+        "your_game": "Your Game:",
+        "copy_clipboard": "📋 Copy to Clipboard",
+        "save_image": "🖼️ Save as Image",
+        "new_game": "🔄 New Game",
+        "copied": "Copied to clipboard! 📋",
+        "image_saved": "Image saved! 🖼️",
+        "not_enough": "Not enough letters!",
+        "not_valid": "Not a valid word!",
+        "word_list_empty": "Word list is empty! Add words first.",
+        "user_lists_title": "📝 User Word Lists",
+        "user_lists_instructions": (
+            "Create custom 5-letter word lists for learning vocabulary.\n"
+            "Words are validated against the dictionary.\n"
+            "Select one or more lists to use in User Mode."
+        ),
+        "new_list_name": "New List Name:",
+        "create": "Create",
+        "enter_list_name": "Enter a list name!",
+        "list_exists": "List already exists!",
+        "no_lists": "No lists yet. Create one above!",
+        "select": "Select",
+        "deselect": "Deselect",
+        "edit": "Edit",
+        "rename": "Rename",
+        "delete": "Delete",
+        "selected_info": "Selected: {count} lists, {words} words total",
+        "edit_title": "Edit: {name}",
+        "edit_instructions": (
+            "Type a 5-letter English word and press Enter to add it.\n"
+            "Only valid English words are accepted (verified via dictionary).\n"
+            "Maximum 5 letters — extra characters are ignored."
+        ),
+        "enter": "Enter",
+        "words_in": "Words in '{name}': ({count})",
+        "no_words": "No words yet. Add some above!",
+        "word_must_5": "Word must be exactly 5 letters!",
+        "word_in_list": "Word already in list!",
+        "checking": "Checking dictionary...",
+        "word_added": "✅ '{word}' added!",
+        "word_invalid": "❌ '{word}' is not a valid English word.",
+        "rename_title": "Rename",
+        "new_name": "New name:",
+        "save": "Save",
+        "cancel": "Cancel",
+        "name_empty": "Name cannot be empty!",
+        "name_exists": "A list with this name already exists!",
+        "brilliant": "Brilliant! 🧠",
+        "magnificent": "Magnificent! ✨",
+        "impressive": "Impressive! 🎯",
+        "splendid": "Splendid! 👏",
+        "great_job": "Great Job! 💪",
+        "phew": "Phew! Close one! 😅",
+        "loss_message": "Better luck next time! 😢",
+        "lang_btn": "RU",
+    },
+    "ru": {
+        "title": "WordleX",
+        "rules": "Правила",
+        "rules_title": "Как играть",
+        "rules_text": (
+            "Угадайте слово за 6 попыток.\n\n"
+            "• Каждая попытка должна быть существующим\n"
+            "  английским словом из 5 букв.\n"
+            "• Нажмите ENTER чтобы отправить слово.\n\n"
+            "После каждой попытки цвет плиток изменится,\n"
+            "показывая насколько вы близки к разгадке:\n"
+        ),
+        "rules_green": "Зелёный — Правильная буква, правильное место",
+        "rules_yellow": "Жёлтый — Правильная буква, неправильное место",
+        "rules_gray": "Серый — Буквы нет в слове",
+        "rules_modes_title": "Режимы игры:",
+        "rules_modes_text": (
+            "• Обычный режим — Случайные слова из встроенного списка\n"
+            "• Свой режим — Ваши собственные списки слов для\n"
+            "  изучения лексики! Создавайте несколько списков\n"
+            "  и переключайтесь между ними."
+        ),
+        "default_mode": "Обычный режим",
+        "user_mode": "Свой режим",
+        "lists": "Списки",
+        "statistics": "Статистика",
+        "view": "Просмотр:",
+        "overall": "Общая",
+        "default_mode_stats": "Обычный режим",
+        "list_prefix": "Список:",
+        "lists_prefix": "Списки:",
+        "archived_list": "Архивная статистика: Удалённый список:",
+        "archived_lists": "Архивная статистика: Удалённые списки:",
+        "delete_stat": "🗑️ Удалить эту статистику",
+        "played": "Сыграно",
+        "win_pct": "% Побед",
+        "current_streak": "Текущая\nсерия",
+        "max_streak": "Лучшая\nсерия",
+        "guess_distribution": "Распределение попыток",
+        "no_games": "В этой конфигурации ещё нет сыгранных игр.",
+        "you_won": "ВЫ ПОБЕДИЛИ! 🎉",
+        "you_lost": "ВЫ ПРОИГРАЛИ 😢",
+        "word_was": "Слово было:",
+        "mode_label": "Режим:",
+        "mode_default": "Обычный",
+        "mode_user": "Свой",
+        "words_suffix": "слов",
+        "definition": "Определение:",
+        "definition_loading": "Определение: Загрузка...",
+        "your_game": "Ваша игра:",
+        "copy_clipboard": "📋 Копировать в буфер обмена",
+        "save_image": "🖼️ Сохранить картинку",
+        "new_game": "🔄 Новая игра",
+        "copied": "Скопировано! 📋",
+        "image_saved": "Картинка сохранена! 🖼️",
+        "not_enough": "Недостаточно букв!",
+        "not_valid": "Недопустимое слово!",
+        "word_list_empty": "Список слов пуст! Сначала добавьте слова.",
+        "user_lists_title": "📝 Списки слов",
+        "user_lists_instructions": (
+            "Создавайте свои списки из 5-буквенных слов для изучения лексики.\n"
+            "Слова проверяются по словарю.\n"
+            "Выберите один или несколько списков для Своего режима."
+        ),
+        "new_list_name": "Название списка:",
+        "create": "Создать",
+        "enter_list_name": "Введите название!",
+        "list_exists": "Список уже существует!",
+        "no_lists": "Списков пока нет. Создайте первый!",
+        "select": "Выбрать",
+        "deselect": "Отменить выбор",
+        "edit": "Редактировать",
+        "rename": "Переименовать",
+        "delete": "Удалить",
+        "selected_info": "Выбрано: {count} списков, {words} слов всего",
+        "edit_title": "Редактировать: {name}",
+        "edit_instructions": (
+            "Введите английское слово из 5 букв и нажмите Enter.\n"
+            "Принимаются только существующие английские слова (проверка по словарю).\n"
+            "Максимум 5 букв — лишние символы игнорируются."
+        ),
+        "enter": "Ввод",
+        "words_in": "Слова в '{name}': ({count})",
+        "no_words": "Слов пока нет. Добавьте выше!",
+        "word_must_5": "Слово должно быть из 5 букв!",
+        "word_in_list": "Слово уже в списке!",
+        "checking": "Проверка по словарю...",
+        "word_added": "✅ '{word}' добавлено!",
+        "word_invalid": "❌ '{word}' — не найдено в словаре.",
+        "rename_title": "Переименовать",
+        "new_name": "Новое название:",
+        "save": "Сохранить",
+        "cancel": "Отмена",
+        "name_empty": "Название не может быть пустым!",
+        "name_exists": "Список с таким названием уже есть!",
+        "brilliant": "Блестяще! 🧠",
+        "magnificent": "Великолепно! ✨",
+        "impressive": "Впечатляюще! 🎯",
+        "splendid": "Превосходно! 👏",
+        "great_job": "Отличная работа! 💪",
+        "phew": "Ох! Было близко! 😅",
+        "loss_message": "Повезёт в следующий раз! 😢",
+        "lang_btn": "EN",
+    },
 }
-
-LOSS_MESSAGE = "Better luck next time! 😢"
-
 
 def resource_path(relative_path):
     """Get absolute path to resource, works for dev and for PyInstaller."""
@@ -212,6 +411,9 @@ class WordleX:
         self.colors = {}
         self.set_theme_colors()
 
+        # --- language ---
+        self.language = self.data.get("language", "en")
+
         # --- ui ---
         self.build_ui()
         self.apply_theme()
@@ -237,6 +439,9 @@ class WordleX:
                 self.data = {}
         else:
             self.data = {}
+
+        # set language
+        self.data.setdefault("language", "en")
 
         # ensure structure
         self.data.setdefault("dark_mode", True)
@@ -354,7 +559,7 @@ class WordleX:
         )
 
         # top bar buttons
-        for btn in [self.theme_btn, self.stats_btn, self.new_game_btn]:
+        for btn in [self.theme_btn, self.stats_btn, self.new_game_btn, self.lang_btn]:
             btn.configure(
                 bg=bar_bg, fg=text,
                 activebackground=bar_bg, activeforeground=text,
@@ -453,6 +658,7 @@ class WordleX:
         self.top_bar.pack(fill="x", side="top")
         self.top_bar.pack_propagate(False)
 
+        # --- left: rules ---
         self.rules_frame = tk.Frame(self.top_bar)
         self.rules_frame.pack(side="left", padx=8, anchor="s", pady=6)
 
@@ -466,13 +672,25 @@ class WordleX:
         self.rules_icon.configure(cursor="hand2")
 
         self.rules_btn = tk.Button(
-            self.rules_frame, text="Rules", font=("Helvetica", 13, "bold"),#space before Rules
+            self.rules_frame, text=self.t("rules"),
+            font=("Helvetica", 13, "bold"),#space before Rules
             bd=0, highlightthickness=0, relief="flat", cursor="hand2",
             pady=0,
             command=self.show_rules,
         )
         self.rules_btn.pack(side="left", pady=(4, 0))
 
+        # --- left: language ---
+        self.lang_btn = tk.Button(
+            self.rules_frame, text=self.t("lang_btn"),
+            font=("Helvetica", 13, "bold"),
+            bd=0, highlightthickness=0, relief="flat",
+            cursor="hand2", pady=0,
+            command=self.toggle_language,
+        )
+        self.lang_btn.pack(side="left", pady=(4, 0))
+
+        # --- right ---
         self.theme_btn = tk.Button(
         self.top_bar, text="🌙", font=("Helvetica", 14), #14
         bd=0, highlightthickness=0, relief="flat", cursor="hand2",
@@ -497,6 +715,7 @@ class WordleX:
         )
         self.new_game_btn.pack(side="right", padx=6, pady=(0, 1))
 
+        # --- app title ---
         self.title_label = tk.Label(
         self.top_bar, text="WordleX", font=("Helvetica", 20, "bold"),
         )
@@ -510,21 +729,21 @@ class WordleX:
         self.mode_inner.pack()
 
         self.default_mode_btn = tk.Button(
-        self.mode_inner, text="Default Mode", font=("Helvetica", 11, "bold"),
+        self.mode_inner, text=self.t("default_mode"), font=("Helvetica", 11, "bold"),
         bd=0, highlightthickness=0, relief="flat", padx=14, pady=4, cursor="hand2",
         command=lambda: self.set_mode("default"),
         )
         self.default_mode_btn.pack(side="left", padx=4)
 
         self.user_mode_btn = tk.Button(
-        self.mode_inner, text="User Mode", font=("Helvetica", 11, "bold"),
+        self.mode_inner, text=self.t("user_mode"), font=("Helvetica", 11, "bold"),
         bd=0, highlightthickness=0, relief="flat", padx=14, pady=4, cursor="hand2",
         command=lambda: self.set_mode("user"),
         )
         self.user_mode_btn.pack(side="left", padx=4)
 
         self.user_list_btn = tk.Button(
-        self.mode_inner, text="📝 Lists", font=("Helvetica", 11),
+        self.mode_inner, text=f"📝 {self.t('lists')}", font=("Helvetica", 11),
         bd=0, highlightthickness=0, relief="flat", padx=8, pady=4, cursor="hand2",
         command=self.show_user_lists_popup,
         )
@@ -634,7 +853,7 @@ class WordleX:
     def start_new_game(self):
         word_list = self.get_word_list()
         if not word_list:
-            self.show_popup_message("Word list is empty! Add words first.")
+            self.show_popup_message(self.t("word_list_empty"))
             return
 
         self.target_word = random.choice(word_list).lower()
@@ -720,7 +939,7 @@ class WordleX:
         if self.game_over:
             return
         if self.current_col < 5:
-            self.show_popup_message("Not enough letters!")
+            self.show_popup_message(self.t("not_enough"))
             return
 
         guess = "".join(self.board[self.current_row]).lower()
@@ -733,7 +952,7 @@ class WordleX:
         if not valid_in_list and not valid_in_builtin:
             # check API
             if not is_real_word_api(guess):
-                self.show_popup_message("Not a valid word!")
+                self.show_popup_message(self.t("not_valid"))
                 return
 
         # calculate colors
@@ -769,14 +988,14 @@ class WordleX:
             self.game_over = True
             self.game_won = True
             self.update_stats(won=True, guesses=self.current_row + 1)
-            msg = ENCOURAGING_WORDS.get(self.current_row + 1, "Well done! 🎉")
+            msg = self._get_encouraging_word(self.current_row + 1)
             self.show_popup_message(msg, after_callback=lambda: self.show_end_game_stats())
         elif self.current_row >= 5:
             self.game_over = True
             self.game_won = False
             self.update_stats(won=False)
             self.show_popup_message(
-                f'{LOSS_MESSAGE}\nThe word was: {self.target_word.upper()}',
+                f'{self.t("loss_message")}\n{self.t("word_was")} {self.target_word.upper()}',
                 after_callback=lambda: self.show_end_game_stats()
             )
         else:
@@ -803,6 +1022,42 @@ class WordleX:
                     target_list[target_list.index(guess_list[i])] = None
 
         return colors
+
+    # ========================
+    # LANGUAGE METHODS
+    # ========================
+    def t(self, key):
+        """Get translation by the key."""
+        return TRANSLATIONS.get(self.language, TRANSLATIONS["en"]).get(key, key)
+
+    def toggle_language(self):
+        """Switch language."""
+        self.language = "ru" if self.language == "en" else "en"
+        self.data["language"] = self.language
+        self.save_data()
+        self.update_ui_language()
+        if self.popup_open:
+            self.close_popup()
+
+    def update_ui_language(self):
+        """Refresh all texts on the main screen."""
+        self.rules_btn.configure(text=self.t("rules"))
+        self.rules_icon.configure(text="📖")
+        self.lang_btn.configure(text=self.t("lang_btn"))
+        self.default_mode_btn.configure(text=self.t("default_mode"))
+        self.user_mode_btn.configure(text=self.t("user_mode"))
+        self.user_list_btn.configure(text=f"📝 {self.t('lists')}")
+
+    def _get_encouraging_word(self, tries):
+        words = {
+            1: self.t("brilliant"),
+            2: self.t("magnificent"),
+            3: self.t("impressive"),
+            4: self.t("splendid"),
+            5: self.t("great_job"),
+            6: self.t("phew"),
+        }
+        return words.get(tries, self.t("great_job"))
 
     # ========================
     # STATS METHODS
@@ -853,24 +1108,35 @@ class WordleX:
     def _get_all_stats_keys(self):
         """Get the list of all statistics keys for UI"""
         keys = [
-            ("🌐 Overall", "overall"),
-            ("📚 Default Mode", "default"),
+            (self.t("overall"), "overall"),
+            (self.t("default_mode_stats"), "default"),
         ]
         for config_name in sorted(self.data["statistics"]["user_configs"].keys()):
             # checking whether lists have been deleted
             list_names = config_name.split(" + ")
             all_exist = all(n in self.data["user_lists"] for n in list_names)
+
             if all_exist:
-                prefix = "📝"
+                # existing lists
+                if len(list_names) == 1:
+                    display = f"{self.t('list_prefix')} {config_name}"
+                else:
+                    display = f"{self.t('lists_prefix')} {config_name}"
             else:
-                prefix = "📝⚠️"
-            keys.append((f"{prefix} {config_name}", config_name))
+                # deleted lists
+                if len(list_names) == 1:
+                    display = f"{self.t('archived_list')} {config_name}"
+                else:
+                    display = f"{self.t('archived_lists')} {config_name}"
+
+            keys.append((display, config_name))
+
         return keys
 
     def update_stats(self, won, guesses=None):
         config_key = self._get_config_key()
 
-        # updating overall statistics and statistics for a specific configuration
+        # updating only overall statistics and statistics of the current configuration
         keys_to_update = ["overall", config_key]
         # removing the duplicate if "default"
         keys_to_update = list(dict.fromkeys(keys_to_update))
@@ -905,6 +1171,12 @@ class WordleX:
                     single_stats["current_streak"] = 0
 
         self.save_data()
+
+    def _delete_archived_stats(self, config_key):
+        """Delete archived statistics by the key"""
+        if config_key in self.data["statistics"]["user_configs"]:
+            del self.data["statistics"]["user_configs"][config_key]
+            self.save_data()
 
     # ========================
     # POPUPS
@@ -983,6 +1255,36 @@ class WordleX:
         # bind to all children widgets inside some area
         # must be called after all widgets have been created
         canvas.after(100, lambda: bind_recursive(canvas))
+
+    def _bind_mousewheel_to_widget(self, canvas, widget):
+        """Bind scroll with mousewheel to the widget and to all its children elements"""
+        def on_mousewheel(event):
+            current_view = canvas.yview()
+            if current_view == (0.0, 1.0):
+                return
+            direction = 0
+            if event.delta:
+                direction = -1 if event.delta > 0 else 1
+            elif event.num == 4:
+                direction = -1
+            elif event.num == 5:
+                direction = 1
+            else:
+                return
+            if direction < 0 and current_view[0] <= 0.0:
+                return
+            if direction > 0 and current_view[1] >= 1.0:
+                return
+            canvas.yview_scroll(direction, "units")
+
+        def bind_recursive(w):
+            w.bind("<MouseWheel>", on_mousewheel)
+            w.bind("<Button-4>", on_mousewheel)
+            w.bind("<Button-5>", on_mousewheel)
+            for child in w.winfo_children():
+                bind_recursive(child)
+
+        bind_recursive(widget)
 
     def show_popup_overlay(self, build_func, on_close=None):
         """Show a popup overlay inside the game window."""
@@ -1084,20 +1386,13 @@ class WordleX:
     def show_rules(self):
         def build(parent):
             title = tk.Label(
-                parent, text="How To Play", font=("Helvetica", 20, "bold"),
+                parent, text=self.t("rules_title"), font=("Helvetica", 20, "bold"),
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
             )
             title.pack(pady=(5, 10))
-
-            rules_text = (
-                "Guess the word in 6 tries.\n\n"
-                "• Each guess must be a valid 5-letter English word.\n"
-                "• Press ENTER to submit your guess.\n\n"
-                "After each guess, the color of the tiles will\n"
-                "change to show how close your guess was:\n\n"
-            )
+            
             body = tk.Label(
-                parent, text=rules_text, font=("Helvetica", 12),
+                parent, text=self.t("rules_text"), font=("Helvetica", 12),
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
                 justify="left",
             )
@@ -1107,10 +1402,10 @@ class WordleX:
             examples_frame = tk.Frame(parent, bg=self.colors["popup_bg"])
             examples_frame.pack(pady=5)
 
-            for color, letter, desc in [
-                ("correct", "G", "  Green — Correct letter, correct spot"),
-                ("present", "Y", "  Yellow — Correct letter, wrong spot"),
-                ("absent", "X", "  Gray — Letter not in the word"),
+            for color, letter, desc_key in [
+                ("correct", "G", "rules_green"),
+                ("present", "Y", "rules_yellow"),
+                ("absent", "X", "rules_gray"),
             ]:
                 row = tk.Frame(examples_frame, bg=self.colors["popup_bg"])
                 row.pack(anchor="w", pady=3, padx=20)
@@ -1121,20 +1416,21 @@ class WordleX:
                 )
                 tile.pack(side="left", padx=(0, 10))
                 desc_lbl = tk.Label(
-                    row, text=desc, font=("Helvetica", 11),
+                    row, text=self.t(desc_key), font=("Helvetica", 11),
                     bg=self.colors["popup_bg"], fg=self.colors["text"],
                 )
                 desc_lbl.pack(side="left")
 
-            modes_text = (
-                "\n\n🎮 Game Modes:\n\n"
-                "• Default Mode — Random words from built-in list\n"
-                "• User Mode — Your custom word lists for learning\n"
-                "  vocabulary! Create multiple lists and switch\n"
-                "  between them.\n"
+            modes_title = tk.Label(
+                parent, text=f"\n\n🎮 {self.t('rules_modes_title')}",
+                font=("Helvetica", 14, "bold"),
+                bg=self.colors["popup_bg"], fg=self.colors["text"],
+                justify="left",
             )
+            modes_title.pack(padx=20)
+
             modes = tk.Label(
-                parent, text=modes_text, font=("Helvetica", 12),
+                parent, text=self.t("rules_modes_text"), font=("Helvetica", 12),
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
                 justify="left",
             )
@@ -1185,19 +1481,19 @@ class WordleX:
 
             # --- title ---
             tk.Label(
-                scroll_frame, text="Statistics", font=("Helvetica", 20, "bold"),
+                scroll_frame, text=self.t("statistics"), font=("Helvetica", 20, "bold"),
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
             ).pack(pady=(5, 10))
 
             # --- statistics selector ---
             selector_frame = tk.Frame(scroll_frame, bg=self.colors["popup_bg"])
-            selector_frame.pack(pady=(0, 10))
+            selector_frame.pack(pady=(0, 10), fill="x", padx=20)
 
             tk.Label(
-                selector_frame, text="View:",
+                selector_frame, text=self.t("view"),
                 font=("Helvetica", 11),
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
-            ).pack(side="left", padx=5)
+            ).pack(anchor="w")
 
             stats_keys = self._get_all_stats_keys()
             display_names = [item[0] for item in stats_keys]
@@ -1215,16 +1511,111 @@ class WordleX:
 
             selected_var = tk.StringVar(value=display_names[default_idx])
 
-            combo = ttk.Combobox(
-                selector_frame, textvariable=selected_var,
-                values=display_names, state="readonly",
-                width=35, font=("Helvetica", 10),
+            # --- button which shows current choice ---
+            selector_btn = tk.Menubutton(
+                selector_frame, textvariable=selected_var, font=("Helvetica", 11),
+                bg=self.colors["entry_bg"], fg=self.colors["entry_fg"],
+                activebackground=self.colors["entry_bg"],
+                activeforeground=self.colors["entry_fg"],
+                bd=0, highlightthickness=2,
+                highlightbackground=self.colors["popup_border"],
+                highlightcolor=self.colors["correct"],
+                relief="flat",
+                anchor="w", padx=10, pady=8,
+                cursor="hand2",
+                indicatoron=True,
             )
-            combo.pack(side="left", padx=5)
+            selector_btn.pack(fill="x", pady=(3, 0))
+
+            # --- dropdown menu ---
+            selector_menu = tk.Menu(
+                selector_btn, tearoff=0, font=("Helvetica", 11),
+                bg=self.colors["popup_bg"], fg=self.colors["text"],
+                activebackground=self.colors["correct"],
+                activeforeground="#ffffff",
+            )
+            selector_btn.configure(menu=selector_menu)
+
+            # --- button for deleting archived statistics ---
+            delete_stats_btn = tk.Button(
+                selector_frame, text=self.t("delete_stat"),
+                font=("Helvetica", 9, "bold"),
+                bg="#e74c3c", fg="#ffffff",
+                bd=0, highlightthickness=0, relief="flat",
+                padx=8, pady=4, cursor="hand2",
+            )
 
             # --- frame for content of statistics ---
             stats_content = tk.Frame(scroll_frame, bg=self.colors["popup_bg"])
             stats_content.pack(fill="x", pady=5)
+
+            def update_delete_btn_visibility():
+                idx = display_names.index(selected_var.get())
+                key = key_values[idx]
+                # showing the button only for archived statistics
+                if key not in ("overall", "default") and key in self.data["statistics"]["user_configs"]:
+                    list_names = key.split(" + ")
+                    all_exist = all(n in self.data["user_lists"] for n in list_names)
+                    if not all_exist:
+                        delete_stats_btn.pack(fill="x", pady=(5, 0))
+                        return
+
+                delete_stats_btn.pack_forget()
+
+            def do_delete_stats():
+                idx = display_names.index(selected_var.get())
+                key = key_values[idx]
+                self._delete_archived_stats(key)
+                # repainting popup
+                if self.popup_overlay and self.popup_overlay.winfo_exists():
+                    self.popup_overlay.destroy()
+                    self.popup_overlay = None
+                self.popup_open = False
+                self._show_stats_popup(end_game=end_game)
+
+            delete_stats_btn.configure(command=do_delete_stats)
+
+            def get_color_for_key(key):
+                if key in ("overall", "default"):
+                    return self.colors["text"]
+                list_names = key.split(" + ")
+                all_exist = all(n in self.data["user_lists"] for n in list_names)
+                if all_exist:
+                    return self.colors["correct"]
+                return self.colors["present"]
+
+            def on_select(idx):
+                selected_var.set(display_names[idx])
+                selector_btn.configure(fg=get_color_for_key(key_values[idx]))
+                render_stats(key_values[idx])
+                update_delete_btn_visibility()
+
+            # initial color of the button
+            selector_btn.configure(fg=get_color_for_key(key_values[default_idx]))
+
+            # filling the menu with colors
+            for i, name in enumerate(display_names):
+                key = key_values[i]
+
+                if key in ("overall", "default"):
+                    # overall and default -> standard color
+                    fg_color = self.colors["text"]
+                else:
+                    list_names = key.split(" + ")
+                    all_exist = all(n in self.data["user_lists"] for n in list_names)
+                    if all_exist:
+                        # existing lists -> green
+                        fg_color = self.colors["correct"]
+                    else:
+                        # archived lists -> yellow
+                        fg_color = self.colors["present"]
+
+                selector_menu.add_command(
+                    label=name,
+                    command=lambda idx=i: on_select(idx),
+                    foreground=fg_color,
+                    activeforeground="#ffffff",
+                )
 
             def render_stats(stats_key):
                 # cleaning
@@ -1234,10 +1625,12 @@ class WordleX:
                 stats = self._get_stats_for_key(stats_key)
                 if stats is None:
                     tk.Label(
-                        stats_content, text="No games played yet in this configuration.",
+                        stats_content, text=self.t("no_games"),
                         font=("Helvetica", 12),
                         bg=self.colors["popup_bg"], fg=self.colors["text_secondary"],
                     ).pack(pady=20)
+                    # binding scroll to new widgets
+                    self._bind_mousewheel_to_widget(canvas, stats_content)
                     return
 
                 # --- stats row ---
@@ -1246,10 +1639,10 @@ class WordleX:
 
                 win_pct = int(stats["wins"] / stats["played"] * 100) if stats["played"] > 0 else 0
                 for value, label in [
-                    (stats["played"], "Played"),
-                    (win_pct, "Win %"),
-                    (stats["current_streak"], "Current\nStreak"),
-                    (stats["max_streak"], "Max\nStreak"),
+                    (stats["played"], self.t("played")),
+                    (win_pct, self.t("win_pct")),
+                    (stats["current_streak"], self.t("current_streak")),
+                    (stats["max_streak"], self.t("max_streak")),
                 ]:
                     col = tk.Frame(stats_row, bg=self.colors["popup_bg"])
                     col.pack(side="left", padx=12)
@@ -1264,7 +1657,7 @@ class WordleX:
 
                 # --- guess distribution ---
                 tk.Label(
-                    stats_content, text="Guess Distribution",
+                    stats_content, text=self.t("guess_distribution"),
                     font=("Helvetica", 14, "bold"),
                     bg=self.colors["popup_bg"], fg=self.colors["text"],
                 ).pack(pady=(15, 5))
@@ -1284,7 +1677,7 @@ class WordleX:
                         width=2,
                     ).pack(side="left")
                     val = int(dist[str(i)])
-                    is_current = (end_game and self.game_won and (self.current_row + 1) == i 
+                    is_current = (end_game and self.game_won and (self.current_row + 1) == i
                         and stats_key == self._get_config_key())
                     bar_color = self.colors["correct"] if is_current else self.colors["absent"]
                     bar_width = max(3, int(val / max_val * 15) + 3) if max_val > 0 else 3
@@ -1295,14 +1688,11 @@ class WordleX:
                         anchor="e",
                     ).pack(side="left", padx=4)
 
-            def on_combo_change(event=None):
-                idx = display_names.index(selected_var.get())
-                render_stats(key_values[idx])
-
-            combo.bind("<<ComboboxSelected>>", on_combo_change)
+                self._bind_mousewheel_to_widget(canvas, stats_content)
 
             # initial render
             render_stats(key_values[default_idx])
+            update_delete_btn_visibility()
 
             # --- end game details ---
             if end_game:
@@ -1310,7 +1700,7 @@ class WordleX:
                     height=2
                 ).pack(fill="x", padx=40, pady=15) #padx=20
 
-                result_text = "YOU WON! 🎉" if self.game_won else "YOU LOST 😢"
+                result_text = self.t("you_won") if self.game_won else self.t("you_lost")
                 result_color = self.colors["correct"] if self.game_won else "#e74c3c"
                 tk.Label(
                     scroll_frame, text=result_text,
@@ -1319,7 +1709,7 @@ class WordleX:
                 ).pack(pady=5)
 
                 tk.Label(
-                    scroll_frame, text=f"The word was: {self.target_word.upper()}",
+                    scroll_frame, text=f"{self.t('word_was')} {self.target_word.upper()}",
                     font=("Helvetica", 14, "bold"),
                     bg=self.colors["popup_bg"], fg=self.colors["text"],
                 ).pack(pady=3)
@@ -1341,10 +1731,10 @@ class WordleX:
                 def fetch_def():
                     defn = get_definition_api(self.target_word)
                     if def_label.winfo_exists():
-                        def_label.configure(text=f"Definition: {defn}")
+                        def_label.configure(text=f"{self.t('definition')} {defn}")
 
                 def_label = tk.Label(
-                    scroll_frame, text="Definition: Loading...",
+                    scroll_frame, text=self.t("definition_loading"),
                     font=("Helvetica", 11, "italic"),
                     bg=self.colors["popup_bg"], fg=self.colors["text_secondary"],
                     justify="center",
@@ -1365,7 +1755,7 @@ class WordleX:
 
                 ## --- game board copy ---
                 tk.Label(
-                    scroll_frame, text="Your Game:",
+                    scroll_frame, text=self.t("your_game"),
                     font=("Helvetica", 12, "bold"),
                     bg=self.colors["popup_bg"], fg=self.colors["text"],
                 ).pack(pady=(10, 3))
@@ -1396,7 +1786,7 @@ class WordleX:
                 share_frame.pack(pady=15)
 
                 tk.Button(
-                    share_frame, text="📋 Copy to Clipboard",
+                    share_frame, text=self.t("copy_clipboard"),
                     font=("Helvetica", 12, "bold"),
                     bg=self.colors["button_bg"], fg=self.colors["button_text"],
                     bd=0, highlightthickness=0, relief="flat",
@@ -1406,7 +1796,7 @@ class WordleX:
                 ).pack(side="left", padx=5)
 
                 tk.Button(
-                    share_frame, text="🖼️ Save as Image",
+                    share_frame, text=self.t("save_image"),
                     font=("Helvetica", 12, "bold"),
                     bg=self.colors["button_bg"], fg=self.colors["button_text"],
                     bd=0, highlightthickness=0, relief="flat",
@@ -1421,7 +1811,7 @@ class WordleX:
                     self.start_new_game()
 
                 tk.Button(
-                    scroll_frame, text="🔄 New Game",
+                    scroll_frame, text=self.t("new_game"),
                     font=("Helvetica", 14, "bold"),
                     bg=self.colors["button_bg"], fg=self.colors["button_text"],
                     bd=0, highlightthickness=0, relief="flat",
@@ -1465,7 +1855,7 @@ class WordleX:
 
         self.root.clipboard_clear()
         self.root.clipboard_append(result)
-        self.show_popup_message("Copied to clipboard! 📋")
+        self.show_popup_message(self.t("copied"))
 
     def share_image(self):
         """Save game result as PNG image."""
@@ -1547,7 +1937,7 @@ class WordleX:
         )
         if file_path:
             img.save(file_path)
-            self.show_popup_message("Image saved! 🖼️")
+            self.show_popup_message(self.t("image_saved"))
 
     # ========================
     # USER LISTS POPUP
@@ -1557,17 +1947,13 @@ class WordleX:
 
         def build(parent):
             title = tk.Label(
-                parent, text="📝 User Word Lists", font=("Helvetica", 18, "bold"),
+                parent, text=self.t("user_lists_title"), font=("Helvetica", 18, "bold"),
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
             )
             title.pack(pady=(5, 5))
 
             instructions = tk.Label(
-                parent, text=(
-                    "Create custom 5-letter word lists for learning vocabulary.\n"
-                    "Words are validated against the dictionary.\n"
-                    "Select one or more lists to use in User Mode."
-                ),
+                parent, text=self.t("user_lists_instructions"),
                 font=("Helvetica", 10),
                 bg=self.colors["popup_bg"], fg=self.colors["text_secondary"],
                 justify="center",
@@ -1579,7 +1965,7 @@ class WordleX:
             new_list_frame.pack(pady=5)
 
             tk.Label(
-                new_list_frame, text="New List Name:",
+                new_list_frame, text=self.t("new_list_name"),
                 font=("Helvetica", 11),
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
             ).pack(side="left", padx=5)
@@ -1597,10 +1983,10 @@ class WordleX:
             def create_list():
                 name = new_list_entry.get().strip()
                 if not name:
-                    self.show_popup_message("Enter a list name!")
+                    self.show_popup_message(self.t("enter_list_name"))
                     return
                 if name in self.data["user_lists"]:
-                    self.show_popup_message("List already exists!")
+                    self.show_popup_message(self.t("list_exists"))
                     return
                 self.data["user_lists"][name] = []
                 self.save_data()
@@ -1613,7 +1999,7 @@ class WordleX:
                 self.show_user_lists_popup()
 
             tk.Button(
-                new_list_frame, text="Create",
+                new_list_frame, text=self.t("create"),
                 font=("Helvetica", 11, "bold"),
                 bg=self.colors["button_bg"], fg=self.colors["button_text"],
                 bd=0, highlightthickness=0, relief="flat",
@@ -1652,12 +2038,12 @@ class WordleX:
 
             if not user_lists:
                 tk.Label(
-                    lists_frame, text="No lists yet. Create one above!",
+                    lists_frame, text=self.t("no_lists"),
                     font=("Helvetica", 12), bg=self.colors["popup_bg"],
                     fg=self.colors["text_secondary"],
                 ).pack(pady=20)
             else:
-                for list_name in user_lists:
+                for list_name in sorted(user_lists.keys()):
                     words = user_lists[list_name]
                     is_active = (list_name in selected)
 
@@ -1686,7 +2072,7 @@ class WordleX:
                     btn_frame.pack(side="right")
 
                     # a text and a colour of the button depend on is_active
-                    select_text = "Deselect" if is_active else "Select"
+                    select_text = self.t("deselect") if is_active else self.t("select")
                     select_bg = self.colors["absent"] if is_active else self.colors["correct"]
 
                     tk.Button(
@@ -1699,7 +2085,7 @@ class WordleX:
                     ).pack(side="left", padx=2)
 
                     tk.Button(
-                        btn_frame, text="Edit",
+                        btn_frame, text=self.t("edit"),
                         font=("Helvetica", 9, "bold"),
                         bg=self.colors["present"], fg="#ffffff",
                         bd=0, highlightthickness=0, relief="flat",
@@ -1708,7 +2094,7 @@ class WordleX:
                     ).pack(side="left", padx=2)
 
                     tk.Button(
-                        btn_frame, text="Delete",
+                        btn_frame, text=self.t("delete"),
                         font=("Helvetica", 9, "bold"),
                         bg="#e74c3c", fg="#ffffff",
                         bd=0, highlightthickness=0, relief="flat",
@@ -1734,7 +2120,7 @@ class WordleX:
                         for n in selected
                         if n in user_lists
                     )
-                    selected_text = f"Selected: {len(selected)} lists, {total_words} words total"
+                    selected_text = self.t("selected_info").format(count=len(selected), words=total_words)
 
                     tk.Label(
                         lists_frame, text=selected_text,
@@ -1803,7 +2189,7 @@ class WordleX:
             title_frame.pack_propagate(False)
 
             title_label = tk.Label(
-                title_frame, text=f"Edit: {current_name[0]}",
+                title_frame, text=self.t("edit_title").format(name=current_name[0]),
                 font=("Helvetica", 18, "bold"),
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
             )
@@ -1811,7 +2197,7 @@ class WordleX:
 
             ## button for renaming
             rename_btn = tk.Button(
-                title_frame, text="✏️ Rename",
+                title_frame, text=f"✏️ {self.t('rename_title')}",
                 font=("Helvetica", 10, "bold"),
                 bg="#3498db", fg="#ffffff",
                 bd=0, highlightthickness=0, relief="flat",
@@ -1843,7 +2229,7 @@ class WordleX:
             )
 
             rename_save_btn = tk.Button(
-                rename_inner, text="Save",
+                rename_inner, text=self.t("save"),
                 font=("Helvetica", 10, "bold"),
                 bg=self.colors["correct"], fg="#ffffff",
                 bd=0, highlightthickness=0, relief="flat",
@@ -1852,7 +2238,7 @@ class WordleX:
             rename_save_btn.pack(side="left", padx=3)
 
             rename_cancel_btn = tk.Button(
-                rename_inner, text="Cancel",
+                rename_inner, text=self.t("cancel"),
                 font=("Helvetica", 10, "bold"),
                 bg=self.colors["absent"], fg="#ffffff",
                 bd=0, highlightthickness=0, relief="flat",
@@ -1881,13 +2267,13 @@ class WordleX:
                 old_name = current_name[0]
 
                 if not new_name:
-                    rename_status.configure(text="Name cannot be empty!", fg="#e74c3c")
+                    rename_status.configure(text=self.t("name_empty"), fg="#e74c3c")
                     return
                 if new_name == old_name:
                     hide_rename()
                     return
                 if new_name in self.data["user_lists"]:
-                    rename_status.configure(text="Name already exists!", fg="#e74c3c")
+                    rename_status.configure(text=self.t("name_exists"), fg="#e74c3c")
                     return
 
                 # transfering data
@@ -1931,11 +2317,7 @@ class WordleX:
 
             # --- instructions ---
             instructions = tk.Label(
-                parent, text=(
-                    "Type a 5-letter English word and press Enter to add it.\n"
-                    "Only valid English words are accepted (verified via dictionary).\n"
-                    "Maximum 5 letters — extra characters are ignored."
-                ),
+                parent, text=self.t("edit_instructions"),
                 font=("Helvetica", 10),
                 bg=self.colors["popup_bg"], fg=self.colors["text_secondary"],
                 justify="center",
@@ -1982,17 +2364,17 @@ class WordleX:
             def add_word(event=None):
                 word = word_var.get().strip().lower()
                 if len(word) != 5:
-                    status_label.configure(text="Word must be exactly 5 letters!", fg="#e74c3c")
+                    status_label.configure(text=self.t("word_must_5"), fg="#e74c3c")
                     return
 
                 # reading actual words from self.data
                 list_name = current_name[0]
                 current_words = [w.lower() for w in self.data["user_lists"].get(list_name, [])]
                 if word in current_words:
-                    status_label.configure(text="Word already in list!", fg="#e74c3c")
+                    status_label.configure(text=self.t("word_in_list"), fg="#e74c3c")
                     return
 
-                status_label.configure(text="Checking dictionary...",
+                status_label.configure(text=self.t("checking"),
                     fg=self.colors["text_secondary"])
                 parent.update()
 
@@ -2007,17 +2389,17 @@ class WordleX:
                             self.data["user_lists"][ln].append(word.upper())
                             self.save_data()
                         word_var.set("")
-                        status_label.configure(text=f"✅ '{word.upper()}' added!", fg=self.colors["correct"])
+                        status_label.configure(text=self.t("word_added").format(word=word.upper()), fg=self.colors["correct"])
                         refresh_word_list()
                     else:
-                        status_label.configure(text=f"❌ '{word.upper()}' is not a valid English word.", fg="#e74c3c")
+                        status_label.configure(text=self.t("word_invalid").format(word=word.upper()), fg="#e74c3c")
 
                 threading.Thread(target=check, daemon=True).start()
 
             word_entry.bind("<Return>", add_word)
 
             enter_btn = tk.Button(
-                input_frame, text="Enter",
+                input_frame, text=self.t("enter"),
                 font=("Helvetica", 12, "bold"),
                 bg=self.colors["button_bg"], fg=self.colors["button_text"],
                 bd=0, highlightthickness=0, relief="flat",
@@ -2075,11 +2457,11 @@ class WordleX:
                 words = self.data["user_lists"].get(list_name, [])
 
                 # refreshing words_header
-                words_header.configure(text=f"Words in '{list_name}': ({len(words)})")
+                words_header.configure(text=self.t("words_in").format(name=list_name, count=len(words)))
 
                 if not words:
                     tk.Label(
-                        words_frame, text="No words yet. Add some above!",
+                        words_frame, text=self.t("no_words"),
                         font=("Helvetica", 11),
                         bg=self.colors["popup_bg"], fg=self.colors["text_secondary"],
                     ).pack(pady=10)
