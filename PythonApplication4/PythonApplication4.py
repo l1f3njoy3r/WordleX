@@ -1,6 +1,5 @@
-from re import S
 import tkinter as tk
-from tkinter import ttk, messagebox, filedialog
+from tkinter import ttk, filedialog
 import random
 import json
 import os
@@ -9,8 +8,7 @@ import datetime
 import urllib.request
 import urllib.error
 import threading
-from PIL import Image, ImageDraw, ImageFont, ImageGrab
-import io
+from PIL import Image, ImageDraw, ImageFont
 import copy
 
 # --- word list ---
@@ -120,8 +118,10 @@ BUILTIN_WORDS = [
 # remove duplicates and ensure all lowercase
 BUILTIN_WORDS = list(set(w.lower() for w in BUILTIN_WORDS if len(w) == 5))
 
-SAVE_FILE = "wordlex_data.json"
+# sorting after removing duplicates
+BUILTIN_WORDS = sorted(set(w.lower() for w in BUILTIN_WORDS if len(w) == 5))
 
+SAVE_FILE = "wordlex_data.json"
 
 TRANSLATIONS = {
     "en": {
@@ -212,6 +212,7 @@ TRANSLATIONS = {
         "edit": "Edit",
         "rename": "Rename",
         "delete": "Delete",
+        "more_words": "more",
         "selected_info": "Selected: {count} lists, {words} words total",
         "edit_title": "Edit: {name}",
         "edit_instructions": (
@@ -331,6 +332,7 @@ TRANSLATIONS = {
         "edit": "Редактировать",
         "rename": "Переименовать",
         "delete": "Удалить",
+        "more_words": "ещё",
         "selected_info": "Выбрано: {count} списков, {words} слов всего",
         "edit_title": "Редактировать: {name}",
         "edit_instructions": (
@@ -436,6 +438,7 @@ class WordleX:
         self.user_input_active = False  # track if user word input bar is active
         self.game_history_for_share = []  # store color results per row
         self._popup_on_close = None
+        self._words_snapshot = None
 
         # --- colors ---
         self.colors = {}
@@ -463,7 +466,7 @@ class WordleX:
     def load_data(self):
         if os.path.exists(SAVE_FILE):
             try:
-                with open(SAVE_FILE, "r") as f:
+                with open(SAVE_FILE, "r", encoding="utf-8") as f:
                     self.data = json.load(f)
             except Exception:
                 self.data = {}
@@ -500,8 +503,12 @@ class WordleX:
     def save_data(self):
         self.data["dark_mode"] = self.dark_mode
         self.data["selected_user_lists"] = self.selected_user_lists
-        with open(SAVE_FILE, "w") as f:
-            json.dump(self.data, f, indent=2)
+        self.data["language"] = self.language
+        try:
+            with open(SAVE_FILE, "w", encoding="utf-8") as f:
+                json.dump(self.data, f, indent=2, ensure_ascii=False)
+        except Exception:
+            pass
 
     # ========================
     # THEME
@@ -983,14 +990,22 @@ class WordleX:
 
         # validate word
         word_list = self.get_word_list()
-        valid_in_list = guess in [w.lower() for w in word_list]
+        valid_in_list = guess in word_list
         valid_in_builtin = guess in BUILTIN_WORDS
 
         if not valid_in_list and not valid_in_builtin:
             # check API
-            if not is_real_word_api(guess):
-                self.show_popup_message(self.t("not_valid"))
-                return
+            # show loading indicator
+            self.show_popup_message("Checking...")
+            def check_and_submit():
+                if not is_real_word_api(guess):
+                    self.root.after(0, lambda: self.show_popup_message(self.t("not_valid")))
+                    return
+                self.root.after(0, lambda: self._finalize_guess(guess))
+            threading.Thread(target=check_and_submit, daemon=True).start()
+            return
+
+        self._finalize_guess(guess)
 
         # calculate colors
         colors = self.calculate_colors(guess, self.target_word)
@@ -1065,7 +1080,8 @@ class WordleX:
     # ========================
     def t(self, key):
         """Get translation by the key."""
-        return TRANSLATIONS.get(self.language, TRANSLATIONS["en"]).get(key, key)
+        lang_dict = TRANSLATIONS.get(self.language, TRANSLATIONS["en"])
+        return lang_dict.get(key, key)
 
     def toggle_language(self):
         """Switch language."""
@@ -1447,21 +1463,46 @@ class WordleX:
     # ========================
     def show_rules(self):
         def build(parent):
+            # scrollable frame
+            canvas = tk.Canvas(parent, highlightthickness=0, bg=self.colors["popup_bg"])
+            scrollbar = tk.Scrollbar(parent, orient="vertical", command=canvas.yview)
+            scroll_frame = tk.Frame(canvas, bg=self.colors["popup_bg"])
+
+            scroll_frame.bind(
+                "<Configure>",
+                lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+            )
+
+            canvas_window = canvas.create_window((0, 0), window=scroll_frame, anchor="n")
+
+            def on_canvas_configure(event):
+                canvas.itemconfig(canvas_window, width=event.width)
+                canvas.coords(canvas_window, event.width / 2, 0)
+
+            canvas.bind("<Configure>", on_canvas_configure)
+            canvas.configure(yscrollcommand=scrollbar.set)
+
+            canvas.pack(side="left", fill="both", expand=True, padx=10, pady=(5, 10))
+            scrollbar.pack(side="right", fill="y")
+
+            # --- content ---
+            ## --- rules title ---
             title = tk.Label(
-                parent, text=self.t("rules_title"), font=("Helvetica", 20, "bold"),
+                scroll_frame, text=self.t("rules_title"), font=("Helvetica", 20, "bold"),
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
             )
             title.pack(pady=(5, 10))
             
+            ## --- rules text body ----
             body = tk.Label(
-                parent, text=self.t("rules_text"), font=("Helvetica", 12),
+                scroll_frame, text=self.t("rules_text"), font=("Helvetica", 12),
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
                 justify="left",
             )
             body.pack(padx=20, fill="x")
 
-            # color examples
-            examples_frame = tk.Frame(parent, bg=self.colors["popup_bg"])
+            ## color examples
+            examples_frame = tk.Frame(scroll_frame, bg=self.colors["popup_bg"])
             examples_frame.pack(pady=5)
 
             for color, letter, desc_key in [
@@ -1470,7 +1511,7 @@ class WordleX:
                 ("absent", "X", "rules_gray"),
             ]:
                 row = tk.Frame(examples_frame, bg=self.colors["popup_bg"])
-                row.pack(anchor="w", pady=3, padx=20)
+                row.pack(anchor="w", pady=3)
                 tile = tk.Label(
                     row, text=letter, width=2, height=1,
                     font=("Helvetica", 16, "bold"),
@@ -1480,58 +1521,76 @@ class WordleX:
                 desc_lbl = tk.Label(
                     row, text=self.t(desc_key), font=("Helvetica", 11),
                     bg=self.colors["popup_bg"], fg=self.colors["text"],
+                    anchor="w", wraplength=300,
                 )
                 desc_lbl.pack(side="left")
 
-            # controls
+            # dynamic wraplenght for color descriptions
+            def update_desc_wrap(event):
+                new_width = event.width - 100
+                if new_width > 50:
+                    for widget in examples_frame.winfo_children():
+                        for child in widget.winfo_children():
+                            if isinstance(child, tk.Label) and child.cget("font") == "Helvetica 11":
+                                child.configure(wraplength=new_width)
+
+            scroll_frame.bind("<Configure>", update_desc_wrap, add="+")
+
+            ## --- controls ---
+            ### --- controls title ---
             controls_title = tk.Label(
-                parent, text=f"\n⌨️ {self.t('rules_controls_title')}",
+                scroll_frame, text=f"\n {self.t('rules_controls_title')}",
                 font=("Helvetica", 14, "bold"),
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
                 justify="left",
             )
-            controls_title.pack(padx=20, anchor="w")
+            controls_title.pack(padx=20)
 
+            ### --- controls text body ---
             controls = tk.Label(
-                parent, text=self.t("rules_controls_text"),
+                scroll_frame, text=self.t("rules_controls_text"),
                 font=("Helvetica", 12),
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
                 justify="left",
             )
             controls.pack(padx=20, anchor="w", fill="x")
 
-            # icons of the top bar buttons
+            ## --- icons of the top bar buttons ---
+            ### --- toolbar title ---
             toolbar_title = tk.Label(
-                parent, text=f"\n🔧 {self.t('rules_toolbar_title')}",
+                scroll_frame, text=f"\n {self.t('rules_toolbar_title')}",
                 font=("Helvetica", 14, "bold"),
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
                 justify="left",
             )
-            toolbar_title.pack(padx=20, anchor="w")
+            toolbar_title.pack(padx=20)
 
+            ### --- toolbar text body ---
             toolbar = tk.Label(
-                parent, text=self.t("rules_toolbar_text"),
+                scroll_frame, text=self.t("rules_toolbar_text"),
                 font=("Helvetica", 12),
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
                 justify="left",
             )
             toolbar.pack(padx=20, anchor="w", fill="x")
 
-            # game modes
+            ## --- game modes ---
+            ### --- game modes title ---
             modes_title = tk.Label(
-                parent, text=f"\n\n🎮 {self.t('rules_modes_title')}",
+                scroll_frame, text=f"\n\n🎮 {self.t('rules_modes_title')}",
                 font=("Helvetica", 14, "bold"),
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
                 justify="left",
             )
-            modes_title.pack(padx=20) #anchor="w",
+            modes_title.pack(padx=20)
 
+            ### --- game modes text ---
             modes = tk.Label(
-                parent, text=self.t("rules_modes_text"), font=("Helvetica", 12),
+                scroll_frame, text=self.t("rules_modes_text"), font=("Helvetica", 12),
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
                 justify="left",
             )
-            modes.pack(padx=20, fill="x") #anchor="w",
+            modes.pack(padx=20, fill="x")
 
             # dynamic wraplenght for all text labels
             text_labels = [body, controls, toolbar, modes]
@@ -1543,7 +1602,9 @@ class WordleX:
                         if lbl.winfo_exists():
                             lbl.configure(wraplength=new_width)
 
-            parent.bind("<Configure>", update_wrap)
+            scroll_frame.bind("<Configure>", update_wrap, add="+")
+
+            self.bind_mousewheel(canvas)
 
         self.show_popup_overlay(build)
 
@@ -2218,7 +2279,7 @@ class WordleX:
                     if words:
                         preview = ", ".join(words[:10])
                         if len(words) > 10:
-                            preview += f", ... (+{len(words) - 10} more)"
+                            preview += f", ... (+{len(words) - 10} {self.t('more_words')})"
                         tk.Label(
                             lf, text=preview, font=("Helvetica", 9),
                             bg=self.colors["popup_bg"], fg=self.colors["text_secondary"],
@@ -2429,8 +2490,14 @@ class WordleX:
                 self.save_data()
 
                 # updating the header
-                title_label.configure(text=f"Edit: {new_name}")
-                words_header.configure(text=f"Words in '{new_name}': ({len(self.data['user_lists'].get(new_name, []))})")
+                title_label.configure(text=self.t("edit_title").format(name=new_name))
+                current_count = len(self.data['user_lists'].get(new_name, []))
+                translation_str = self.t("words_in")
+                if translation_str:
+                    words_header.configure(text=translation_str.format(
+                        name=new_name,
+                        count=current_count
+                        ))
                 hide_rename()
 
             rename_entry.bind("<Return>", do_rename)
@@ -2542,10 +2609,10 @@ class WordleX:
             enter_btn.pack(side="left", padx=5)
 
             # bind backspace for this entry
-            def on_backspace(event):
-                pass    # default behavior handles it
+            #def on_backspace(event):
+                #pass    # default behavior handles it
 
-            word_entry.bind("<BackSpace>", on_backspace)
+            #word_entry.bind("<BackSpace>", on_backspace)
 
             tk.Frame(parent, bg=self.colors["popup_border"], height=2,
             ).pack(fill="x", padx=20, pady=10)

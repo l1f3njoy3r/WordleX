@@ -53,9 +53,7 @@
     ],
     "a": [
       "CREAM"
-    ],
-    "b": [],
-    "c": []
+    ]
   },
   "selected_user_lists": [
     "a"
@@ -202,34 +200,6 @@
           "6": 0
         }
       },
-      "a": {
-        "played": 26,
-        "wins": 22,
-        "current_streak": 3,
-        "max_streak": 13,
-        "guess_distribution": {
-          "1": 11,
-          "2": 9,
-          "3": 2,
-          "4": 0,
-          "5": 0,
-          "6": 0
-        }
-      },
-      "a + b": {
-        "played": 9,
-        "wins": 8,
-        "current_streak": 1,
-        "max_streak": 7,
-        "guess_distribution": {
-          "1": 4,
-          "2": 4,
-          "3": 0,
-          "4": 0,
-          "5": 0,
-          "6": 0
-        }
-      },
       "b": {
         "played": 9,
         "wins": 8,
@@ -252,6 +222,34 @@
         "guess_distribution": {
           "1": 1,
           "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        }
+      },
+      "a": {
+        "played": 26,
+        "wins": 22,
+        "current_streak": 3,
+        "max_streak": 13,
+        "guess_distribution": {
+          "1": 11,
+          "2": 9,
+          "3": 2,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        }
+      },
+      "a + b": {
+        "played": 9,
+        "wins": 8,
+        "current_streak": 1,
+        "max_streak": 7,
+        "guess_distribution": {
+          "1": 4,
+          "2": 4,
           "3": 0,
           "4": 0,
           "5": 0,
