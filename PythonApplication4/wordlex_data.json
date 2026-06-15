@@ -1,5 +1,5 @@
 {
-  "dark_mode": true,
+  "dark_mode": false,
   "user_lists": {
     "Fruits": [
       "APPLE",
@@ -45,35 +45,40 @@
       "DESKS",
       "BOARD"
     ],
-    "test_123": [
+    "test_1231": [
       "CREAM",
       "POUND",
       "FIGHT",
       "SIGHT"
-    ]
+    ],
+    "a": [
+      "CREAM"
+    ],
+    "b": [],
+    "c": []
   },
   "selected_user_lists": [
-    "test"
+    "a"
   ],
   "statistics": {
     "overall": {
-      "played": 58,
-      "wins": 54,
-      "current_streak": 0,
+      "played": 98,
+      "wins": 88,
+      "current_streak": 5,
       "max_streak": 40,
       "guess_distribution": {
-        "1": 18,
-        "2": 11,
-        "3": 12,
+        "1": 34,
+        "2": 23,
+        "3": 17,
         "4": 9,
         "5": 3,
-        "6": 1
+        "6": 2
       }
     },
     "default": {
-      "played": 46,
+      "played": 47,
       "wins": 43,
-      "current_streak": 29,
+      "current_streak": 0,
       "max_streak": 29,
       "guess_distribution": {
         "1": 13,
@@ -86,31 +91,17 @@
     },
     "user_configs": {
       "test": {
-        "played": 11,
-        "wins": 10,
-        "current_streak": 0,
+        "played": 21,
+        "wins": 20,
+        "current_streak": 10,
         "max_streak": 10,
         "guess_distribution": {
-          "1": 4,
-          "2": 0,
-          "3": 3,
+          "1": 8,
+          "2": 3,
+          "3": 5,
           "4": 3,
           "5": 0,
-          "6": 0
-        }
-      },
-      "test + test_123 + unique": {
-        "played": 1,
-        "wins": 1,
-        "current_streak": 1,
-        "max_streak": 1,
-        "guess_distribution": {
-          "1": 1,
-          "2": 0,
-          "3": 0,
-          "4": 0,
-          "5": 0,
-          "6": 0
+          "6": 1
         }
       },
       "unique": {
@@ -120,34 +111,6 @@
         "max_streak": 2,
         "guess_distribution": {
           "1": 1,
-          "2": 0,
-          "3": 0,
-          "4": 1,
-          "5": 0,
-          "6": 0
-        }
-      },
-      "test_123": {
-        "played": 2,
-        "wins": 2,
-        "current_streak": 2,
-        "max_streak": 2,
-        "guess_distribution": {
-          "1": 1,
-          "2": 0,
-          "3": 0,
-          "4": 1,
-          "5": 0,
-          "6": 0
-        }
-      },
-      "Fruits + Vegies + test + test_123 + unique": {
-        "played": 1,
-        "wins": 1,
-        "current_streak": 1,
-        "max_streak": 1,
-        "guess_distribution": {
-          "1": 0,
           "2": 0,
           "3": 0,
           "4": 1,
@@ -170,14 +133,14 @@
         }
       },
       "Vegies": {
-        "played": 1,
-        "wins": 1,
-        "current_streak": 1,
-        "max_streak": 1,
+        "played": 2,
+        "wins": 2,
+        "current_streak": 2,
+        "max_streak": 2,
         "guess_distribution": {
           "1": 0,
           "2": 0,
-          "3": 0,
+          "3": 1,
           "4": 1,
           "5": 0,
           "6": 0
@@ -196,8 +159,106 @@
           "5": 0,
           "6": 0
         }
+      },
+      "test + test_1231 + unique": {
+        "played": 1,
+        "wins": 1,
+        "current_streak": 1,
+        "max_streak": 1,
+        "guess_distribution": {
+          "1": 1,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        }
+      },
+      "test_1231": {
+        "played": 2,
+        "wins": 2,
+        "current_streak": 2,
+        "max_streak": 2,
+        "guess_distribution": {
+          "1": 1,
+          "2": 0,
+          "3": 0,
+          "4": 1,
+          "5": 0,
+          "6": 0
+        }
+      },
+      "Fruits + Vegies + test + test_1231 + unique": {
+        "played": 1,
+        "wins": 1,
+        "current_streak": 1,
+        "max_streak": 1,
+        "guess_distribution": {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 1,
+          "5": 0,
+          "6": 0
+        }
+      },
+      "a": {
+        "played": 26,
+        "wins": 22,
+        "current_streak": 3,
+        "max_streak": 13,
+        "guess_distribution": {
+          "1": 11,
+          "2": 9,
+          "3": 2,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        }
+      },
+      "a + b": {
+        "played": 9,
+        "wins": 8,
+        "current_streak": 1,
+        "max_streak": 7,
+        "guess_distribution": {
+          "1": 4,
+          "2": 4,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        }
+      },
+      "b": {
+        "played": 9,
+        "wins": 8,
+        "current_streak": 1,
+        "max_streak": 7,
+        "guess_distribution": {
+          "1": 4,
+          "2": 4,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        }
+      },
+      "c": {
+        "played": 2,
+        "wins": 1,
+        "current_streak": 1,
+        "max_streak": 1,
+        "guess_distribution": {
+          "1": 1,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "6": 0
+        }
       }
     }
   },
-  "language": "en"
+  "language": "ru"
 }

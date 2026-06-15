@@ -135,6 +135,21 @@ TRANSLATIONS = {
             "After each guess, the color of the tiles will\n"
             "change to show how close your guess was:\n"
         ),
+        "rules_controls_title": "Controls:",
+        "rules_controls_text": (
+            "• Type letters using your physical keyboard or\n"
+            "  the on-screen virtual keyboard.\n"
+            "• ENTER — submit your guess.\n"
+            "• BACKSPACE — delete the last letter.\n"
+            "• ESC — close any popup window."
+        ),
+        "rules_toolbar_title": "Toolbar Icons:",
+        "rules_toolbar_text": (
+            "• 🔄 — Start a new game.\n"
+            "• 📊 — View your statistics.\n"
+            "• ☀/🌙 — Switch between light and dark themes.\n"
+            "• EN/RU — Switch language."
+        ),
         "rules_green": "Green — Correct letter, correct spot",
         "rules_yellow": "Yellow — Correct letter, wrong spot",
         "rules_gray": "Gray — Letter not in the word",
@@ -238,6 +253,21 @@ TRANSLATIONS = {
             "• Нажмите ENTER чтобы отправить слово.\n\n"
             "После каждой попытки цвет плиток изменится,\n"
             "показывая насколько вы близки к разгадке:\n"
+        ),
+        "rules_controls_title": "Управление:",
+        "rules_controls_text": (
+            "• Вводите буквы с физической клавиатуры или\n"
+            "  с виртуальной клавиатуры на экране.\n"
+            "• ENTER — отправить слово.\n"
+            "• BACKSPACE — удалить последнюю букву.\n"
+            "• ESC — закрыть всплывающее окно."
+        ),
+        "rules_toolbar_title": "Иконки на панели:",
+        "rules_toolbar_text": (
+            "• 🔄 — Начать новую игру.\n"
+            "• 📊 — Посмотреть статистику.\n"
+            "• ☀/🌙 — Переключить светлую и тёмную тему.\n"
+            "• EN/RU — Переключить язык."
         ),
         "rules_green": "Зелёный — Правильная буква, правильное место",
         "rules_yellow": "Жёлтый — Правильная буква, неправильное место",
@@ -789,7 +819,6 @@ class WordleX:
             self.tile_labels.append(row_labels)
             self.tile_frames.append(row_tiles)
 
-
         # --- keyboard ---
         self.keyboard_frame = tk.Frame(self.main_frame)
         self.keyboard_frame.pack(pady=4, fill="x")
@@ -843,23 +872,18 @@ class WordleX:
             combined = list(set(combined))
             if combined:
                 return combined
+            return []
         return BUILTIN_WORDS 
-            
-        
 
     # ========================
     # GAME LOGIC
     # ========================
     def start_new_game(self):
         word_list = self.get_word_list()
-        if not word_list:
-            self.show_popup_message(self.t("word_list_empty"))
-            return
 
-        self.target_word = random.choice(word_list).lower()
+        # resetting game board in the any case
         self.current_row = 0
         self.current_col = 0
-        self.game_over = False
         self.game_won = False
         self.board = [["" for _ in range(5)] for _ in range(6)]
         self.board_colors = [[None for _ in range(5)] for _ in range(6)]
@@ -871,6 +895,16 @@ class WordleX:
         for r in range(6):
             for c in range(5):
                 self.tile_labels[r][c].configure(text="")
+        
+        if not word_list:
+            self.target_word = ""
+            self.game_over = True
+            self.show_popup_message(self.t("word_list_empty"))
+            self.apply_theme()
+            return
+
+        self.target_word = random.choice(word_list).lower()
+        self.game_over = False
         # reset keyboard colors
         self.apply_theme()
 
@@ -937,6 +971,9 @@ class WordleX:
 
     def submit_guess(self):
         if self.game_over:
+            return
+        if not self.target_word:
+            self.show_popup_message(self.t("word_list_empty"))
             return
         if self.current_col < 5:
             self.show_popup_message(self.t("not_enough"))
@@ -1327,7 +1364,7 @@ class WordleX:
             activebackground=self.colors["popup_bg"],
             activeforeground=self.colors["text"],
         )
-        close_btn.pack(side="right", padx=10, pady=2)
+        close_btn.place(relx=1.0, y=8, x=-8, anchor="ne")
 
         # frame for content under the top bar and close button (scrollable)
         content = tk.Frame(outer, bg=self.colors["popup_bg"])
@@ -1342,6 +1379,31 @@ class WordleX:
         self.popup_open = False
         self.user_input_active = False
         self._popup_on_close = None
+
+        # checking whether the words in the selected lists have changed
+        if self.game_mode == "user" and hasattr(self, '_words_snapshot'):
+            current_words = self._get_selected_words_snapshot()
+            snapshot = self._words_snapshot
+            self._words_snapshot = None
+
+            # if the current list is empty, show the message
+            if current_words is not None and len(current_words) == 0:
+                self.show_popup_message(self.t("word_list_empty"))
+                self.start_new_game()
+                return
+
+            # if the set of words has changed, restart
+            if current_words != snapshot:
+                self.start_new_game()
+                return
+
+            # if target_word is no longer in the list, restart
+            if current_words is not None and self.target_word not in current_words:
+                self.start_new_game()
+                return
+
+        else:
+            self._words_snapshot = None
 
     def close_popup_and_return_to_lists(self):
         """Closes editing popup and returns to user's lists popup"""
@@ -1396,9 +1458,9 @@ class WordleX:
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
                 justify="left",
             )
-            body.pack(padx=20)
+            body.pack(padx=20, fill="x")
 
-            # Color examples
+            # color examples
             examples_frame = tk.Frame(parent, bg=self.colors["popup_bg"])
             examples_frame.pack(pady=5)
 
@@ -1421,20 +1483,67 @@ class WordleX:
                 )
                 desc_lbl.pack(side="left")
 
+            # controls
+            controls_title = tk.Label(
+                parent, text=f"\n⌨️ {self.t('rules_controls_title')}",
+                font=("Helvetica", 14, "bold"),
+                bg=self.colors["popup_bg"], fg=self.colors["text"],
+                justify="left",
+            )
+            controls_title.pack(padx=20, anchor="w")
+
+            controls = tk.Label(
+                parent, text=self.t("rules_controls_text"),
+                font=("Helvetica", 12),
+                bg=self.colors["popup_bg"], fg=self.colors["text"],
+                justify="left",
+            )
+            controls.pack(padx=20, anchor="w", fill="x")
+
+            # icons of the top bar buttons
+            toolbar_title = tk.Label(
+                parent, text=f"\n🔧 {self.t('rules_toolbar_title')}",
+                font=("Helvetica", 14, "bold"),
+                bg=self.colors["popup_bg"], fg=self.colors["text"],
+                justify="left",
+            )
+            toolbar_title.pack(padx=20, anchor="w")
+
+            toolbar = tk.Label(
+                parent, text=self.t("rules_toolbar_text"),
+                font=("Helvetica", 12),
+                bg=self.colors["popup_bg"], fg=self.colors["text"],
+                justify="left",
+            )
+            toolbar.pack(padx=20, anchor="w", fill="x")
+
+            # game modes
             modes_title = tk.Label(
                 parent, text=f"\n\n🎮 {self.t('rules_modes_title')}",
                 font=("Helvetica", 14, "bold"),
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
                 justify="left",
             )
-            modes_title.pack(padx=20)
+            modes_title.pack(padx=20) #anchor="w",
 
             modes = tk.Label(
                 parent, text=self.t("rules_modes_text"), font=("Helvetica", 12),
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
                 justify="left",
             )
-            modes.pack(padx=20)
+            modes.pack(padx=20, fill="x") #anchor="w",
+
+            # dynamic wraplenght for all text labels
+            text_labels = [body, controls, toolbar, modes]
+
+            def update_wrap(event):
+                new_width = event.width - 50
+                if new_width > 50:
+                    for lbl in text_labels:
+                        if lbl.winfo_exists():
+                            lbl.configure(wraplength=new_width)
+
+            parent.bind("<Configure>", update_wrap)
 
         self.show_popup_overlay(build)
 
@@ -1566,7 +1675,7 @@ class WordleX:
                 idx = display_names.index(selected_var.get())
                 key = key_values[idx]
                 self._delete_archived_stats(key)
-                # repainting popup
+                # redrawing the popup
                 if self.popup_overlay and self.popup_overlay.winfo_exists():
                     self.popup_overlay.destroy()
                     self.popup_overlay = None
@@ -1717,10 +1826,10 @@ class WordleX:
                 ## --- game mode ---
                 config_key = self._get_config_key()
                 if config_key == "default":
-                    mode_display = "Mode: Default"
+                    mode_display = f"{self.t('mode_label')} {self.t('mode_default')}"
                 else:
                     total_words = len(self.get_word_list())
-                    mode_display = f"Mode: User ({config_key}) — {total_words} words"
+                    mode_display = f"{self.t('mode_label')} {self.t('mode_user')} ({config_key}) — {total_words} {self.t('words_suffix')}"
 
                 tk.Label(
                     scroll_frame, text=mode_display, font=("Helvetica", 10),
@@ -1783,7 +1892,7 @@ class WordleX:
 
                 ## --- share buttons ---
                 share_frame = tk.Frame(scroll_frame, bg=self.colors["popup_bg"])
-                share_frame.pack(pady=15)
+                share_frame.pack(pady=10)
 
                 tk.Button(
                     share_frame, text=self.t("copy_clipboard"),
@@ -1793,7 +1902,7 @@ class WordleX:
                     padx=15, pady=8, cursor="hand2",
                     command=self.share_text,
                     activebackground=self.colors["correct"],
-                ).pack(side="left", padx=5)
+                ).pack(fill="x", pady=2)
 
                 tk.Button(
                     share_frame, text=self.t("save_image"),
@@ -1803,7 +1912,7 @@ class WordleX:
                     padx=15, pady=8, cursor="hand2",
                     command=self.share_image,
                     activebackground=self.colors["correct"],
-                ).pack(side="left", padx=5)
+                ).pack(fill="x", pady=2)
 
                 ## --- new game button ---
                 def new_game_and_close():
@@ -1843,9 +1952,9 @@ class WordleX:
         if self.game_mode == "user" and self.selected_user_lists:
             lists_names = ", ".join(self.selected_user_lists)
             total_words = len(self.get_word_list())
-            mode_text = f"Mode: User ({lists_names}) — {total_words} words"
+            mode_text = f"{self.t('mode_label')} {self.t('mode_user')} ({lists_names}) — {total_words} {self.t('words_suffix')}"
         else:
-            mode_text = "Mode: Default"
+            mode_text = f"{self.t('mode_label')} {self.t('mode_default')}"
 
         result = f"WordleX {today} {score}\n"
         result += f"{mode_text}\n\n"
@@ -1891,7 +2000,7 @@ class WordleX:
             font_mode = ImageFont.load_default()
             font_letter = ImageFont.load_default()
 
-        # title
+        # --- title ---
         today = datetime.date.today().strftime("%Y-%m-%d")
         score = f"{'X' if not self.game_won else rows}/6"
         title_text = f"WordleX  {today}  {score}"
@@ -1899,19 +2008,19 @@ class WordleX:
         tw = bbox[2] - bbox[0]
         draw.text(((width - tw) // 2, 12), title_text, fill=text_color, font=font_title)
 
-        # mode string
+        # --- mode string ---
         if self.game_mode == "user" and self.selected_user_lists:
             lists_names = ", ".join(self.selected_user_lists)
             total_words = len(self.get_word_list())
-            mode_text = f"Mode: User ({lists_names}) — {total_words} words"
+            mode_text = f"{self.t('mode_label')} {self.t('mode_user')} ({lists_names}) — {total_words} {self.t('words_suffix')}"
         else:
-            mode_text = "Mode: Default"
+            mode_text = f"{self.t('mode_label')} {self.t('mode_default')}"
 
         bbox = draw.textbbox((0, 0), mode_text, font=font_mode)
         mw = bbox[2] - bbox[0]
         draw.text(((width - mw) // 2, 45), mode_text, fill=mode_color, font=font_mode)
 
-        # tiles
+        # --- tiles ---
         y = header_height + padding // 2
         for r_idx, row_colors in enumerate(self.game_history_for_share):
             x = padding
@@ -1944,6 +2053,10 @@ class WordleX:
     # ========================
     def show_user_lists_popup(self):
         self.user_input_active = True
+
+        # remembering the state of words when opening ONLY if the snapshot doesen't exist yet
+        if not hasattr(self, '_words_snapshot') or self._words_snapshot is None:
+            self._words_snapshot = self._get_selected_words_snapshot()
 
         def build(parent):
             title = tk.Label(
@@ -1990,7 +2103,7 @@ class WordleX:
                     return
                 self.data["user_lists"][name] = []
                 self.save_data()
-                # repainting the popup
+                # redrawing the popup
                 if self.popup_overlay and self.popup_overlay.winfo_exists():
                     self.popup_overlay.destroy()
                     self.popup_overlay = None
@@ -2055,21 +2168,20 @@ class WordleX:
                     )
                     lf.pack(fill="x", padx=10, pady=4, expand=False)
 
-                    header = tk.Frame(lf, bg=self.colors["popup_bg"])
-                    header.pack(fill="x", padx=5, pady=3)
-
+                    # --- user's list name (first string) ---
                     # emoji depends on is_active
                     emoji = "✅" if is_active else "⬜"
                     tk.Label(
-                        header,
-                        text=f"{emoji} {list_name} ({len(words)} words)",
+                        lf,
+                        text=f"{emoji} {list_name} ({len(words)} {self.t('words_suffix')})",
                         font=("Helvetica", 12, "bold"),
                         bg=self.colors["popup_bg"], fg=self.colors["text"],
                         anchor="w",
-                    ).pack(side="left", fill="x", expand=True)
+                    ).pack(fill="x", padx=5, pady=(3, 0)) #pack(side="left", fill="x", expand=True)
 
-                    btn_frame = tk.Frame(header, bg=self.colors["popup_bg"])
-                    btn_frame.pack(side="right")
+                    # --- buttons (second string) ---
+                    btn_frame = tk.Frame(lf, bg=self.colors["popup_bg"])
+                    btn_frame.pack(fill="x", padx=5, pady=(2, 3)) #btn_frame.pack(side="right")
 
                     # a text and a colour of the button depend on is_active
                     select_text = self.t("deselect") if is_active else self.t("select")
@@ -2149,9 +2261,21 @@ class WordleX:
         # restarting the game with the new selection of the user's lists
         if self.game_mode == "user":
             self.start_new_game()
+            # updating the snapshot ONLY AFTER starting new game
+            self._words_snapshot = self._get_selected_words_snapshot()
 
-        # repainting the popup
+        # redrawing the popup
         self.show_user_lists_popup()
+
+    def _get_selected_words_snapshot(self):
+        """Get a snapshot of the current words in selected lists."""
+        if self.game_mode == "user" and self.selected_user_lists:
+            words = set()
+            for list_name in self.selected_user_lists:
+                for w in self.data["user_lists"].get(list_name, []):
+                    words.add(w.lower())
+            return words
+        return None
 
     def delete_user_list(self, name):
         if name in self.data["user_lists"]:
@@ -2172,7 +2296,7 @@ class WordleX:
         if self.game_mode == "user":
             self.start_new_game()
 
-        # repainting the popup
+        # redrawing the popup
         self.show_user_lists_popup()
 
     def edit_user_list(self, name):
@@ -2183,7 +2307,7 @@ class WordleX:
 
         def build(parent):
 
-            # --- header with an ability to rename ---
+            # --- list's header with an ability to rename the list ---
             title_frame = tk.Frame(parent, bg=self.colors["popup_bg"], height=40) #there wasn't height=40
             title_frame.pack(pady=(5, 5), fill="x", padx=20)
             title_frame.pack_propagate(False)
@@ -2193,17 +2317,17 @@ class WordleX:
                 font=("Helvetica", 18, "bold"),
                 bg=self.colors["popup_bg"], fg=self.colors["text"],
             )
-            title_label.place(relx=0.5, rely=0.5, anchor="center")
+            title_label.place(relx=0.5, rely=0.5, anchor="center") #title_label.pack(pady=(5, 2))
 
-            ## button for renaming
+            # --- button for renaming (under the header) ---
             rename_btn = tk.Button(
-                title_frame, text=f"✏️ {self.t('rename_title')}",
+                parent, text=f"✏️ {self.t('rename_title')}",
                 font=("Helvetica", 10, "bold"),
                 bg="#3498db", fg="#ffffff",
                 bd=0, highlightthickness=0, relief="flat",
                 padx=8, pady=2, cursor="hand2",
             )
-            rename_btn.pack(side="right")
+            rename_btn.pack(pady=(0, 5)) 
 
             # --- frame for renaming (hidden by default) ---
             rename_frame = tk.Frame(parent, bg=self.colors["popup_bg"])
@@ -2322,7 +2446,16 @@ class WordleX:
                 bg=self.colors["popup_bg"], fg=self.colors["text_secondary"],
                 justify="center",
             )
-            instructions.pack(pady=(0, 10))
+            instructions.pack(pady=(0, 10), padx=20, fill="x")
+
+            # dynamic wraplenght for instructions
+            def update_instructions_wrap(event):
+                new_width = event.width - 50
+                if new_width > 50:
+                    if instructions.winfo_exists():
+                        instructions.configure(wraplength=new_width)
+
+            parent.bind("<Configure>", update_instructions_wrap)
 
             # --- input bar ---
             input_frame = tk.Frame(parent, bg=self.colors["popup_bg"])
