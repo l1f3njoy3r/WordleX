@@ -121,7 +121,30 @@ BUILTIN_WORDS = list(set(w.lower() for w in BUILTIN_WORDS if len(w) == 5))
 # sorting after removing duplicates
 BUILTIN_WORDS = sorted(set(w.lower() for w in BUILTIN_WORDS if len(w) == 5))
 
-SAVE_FILE = "wordlex_data.json"
+def get_save_file_path():
+    """Get the path to the save file in AppData (Windows) or home dir."""
+    app_name = "WordleX"
+
+    if sys.platform == "win32":
+        # Windows: C:\Users\NAME\AppData\Roaming\WordleX\
+        base = os.environ.get("APPDATA", os.path.expanduser("~"))
+    elif sys.platform == "darwin":
+        # macOS: ~/Library/Application Support/WordleX/
+        base = os.path.expanduser("~/Library/Application Support")
+    else:
+        # Linux: ~/.local/share/WordleX/
+        base = os.path.expanduser("~/.local/share")
+
+    app_dir = os.path.join(base, app_name)
+
+    # creating a folder if it doesn't exist
+    if not os.path.exists(app_dir):
+        os.makedirs(app_dir, exist_ok=True)
+        print(f"Directory created at: {app_dir}")
+
+    return os.path.join(app_dir, "wordlex_data.json")
+
+SAVE_FILE = get_save_file_path()
 
 TRANSLATIONS = {
     "en": {

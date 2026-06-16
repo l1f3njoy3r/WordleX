@@ -1,5 +1,5 @@
 {
-  "dark_mode": false,
+  "dark_mode": true,
   "user_lists": {
     "Fruits": [
       "APPLE",
@@ -56,18 +56,18 @@
     ]
   },
   "selected_user_lists": [
-    "a"
+    "test"
   ],
   "statistics": {
     "overall": {
-      "played": 99,
-      "wins": 89,
-      "current_streak": 6,
+      "played": 100,
+      "wins": 90,
+      "current_streak": 7,
       "max_streak": 40,
       "guess_distribution": {
         "1": 35,
         "2": 23,
-        "3": 17,
+        "3": 18,
         "4": 9,
         "5": 3,
         "6": 2
@@ -89,14 +89,14 @@
     },
     "user_configs": {
       "test": {
-        "played": 21,
-        "wins": 20,
-        "current_streak": 10,
-        "max_streak": 10,
+        "played": 22,
+        "wins": 21,
+        "current_streak": 11,
+        "max_streak": 11,
         "guess_distribution": {
           "1": 8,
           "2": 3,
-          "3": 5,
+          "3": 6,
           "4": 3,
           "5": 0,
           "6": 1
