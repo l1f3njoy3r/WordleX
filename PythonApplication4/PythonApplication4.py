@@ -73,8 +73,8 @@ BUILTIN_WORDS = [
     "pause", "peace", "peach", "pearl", "pedal", "penny", "perch", "peril", "phase", "phone",
     "photo", "piano", "piece", "pilot", "pinch", "pitch", "pixel", "pizza", "place", "plain",
     "plane", "plant", "plate", "plaza", "plead", "pleat", "pluck", "plumb", "plume", "plump",
-    "plunge","point", "polar", "porch", "poser", "pouch", "pound", "power", "prank", "prawn",
-    "press", "price", "pride", "prime", "prince","print", "prior", "prize", "probe", "prone",
+    "point", "polar", "porch", "poser", "pouch", "pound", "power", "prank", "prawn",
+    "press", "price", "pride", "prime", "print", "prior", "prize", "probe", "prone",
     "proof", "prose", "proud", "prove", "proxy", "prune", "psalm", "pulse", "punch", "pupil",
     "purse", "pushy", "quail", "qualm", "query", "quest", "queue", "quick", "quiet", "quilt",
     "quirk", "quota", "quote", "rabbi", "radar", "radio", "raise", "rally", "ranch", "range",
@@ -108,7 +108,7 @@ BUILTIN_WORDS = [
     "unify", "union", "unite", "unity", "until", "upper", "upset", "urban", "usage", "usual",
     "utter", "valid", "valor", "value", "valve", "vapor", "vault", "venue", "verge", "verse",
     "vigor", "vinyl", "viola", "viral", "virus", "visit", "vista", "vital", "vivid", "vocal",
-    "vodka", "voice", "voter", "vouch", "vulgar","waist", "waste", "watch", "water", "weary",
+    "vodka", "voice", "voter", "vouch", "waist", "waste", "watch", "water", "weary",
     "weave", "wedge", "weigh", "weird", "whale", "wheat", "wheel", "where", "which", "while",
     "whine", "whirl", "white", "whole", "whose", "wider", "wield", "windy", "witch", "woman",
     "women", "world", "worry", "worse", "worst", "worth", "would", "wound", "wrath", "wrist",
@@ -996,7 +996,7 @@ class WordleX:
         if not valid_in_list and not valid_in_builtin:
             # check API
             # show loading indicator
-            self.show_popup_message("Checking...")
+            self.show_popup_message(self.t("checking"))
             def check_and_submit():
                 if not is_real_word_api(guess):
                     self.root.after(0, lambda: self.show_popup_message(self.t("not_valid")))
@@ -1007,6 +1007,33 @@ class WordleX:
 
         self._finalize_guess(guess)
 
+    def calculate_colors(self, guess, target):
+        colors = ["absent"] * 5
+        target_list = list(target)
+        guess_list = list(guess)
+
+        # first pass: correct
+        for i in range(5):
+            if guess_list[i] == target_list[i]:
+                colors[i] = "correct"
+                target_list[i] = None
+                guess_list[i] = None
+
+        # second pass: present
+        for i in range(5):
+            if guess_list[i] is not None:
+                if guess_list[i] in target_list:
+                    colors[i] = "present"
+                    target_list[target_list.index(guess_list[i])] = None
+
+        return colors
+
+    def _finalize_guess(self, guess):
+        """
+        Finishes processing the attempt after validating the word.
+        Called both from the main thread (local validation),
+        and from the background thread via self.root.after (API validation).
+        """
         # calculate colors
         colors = self.calculate_colors(guess, self.target_word)
         self.board_colors[self.current_row] = colors
@@ -1032,8 +1059,10 @@ class WordleX:
             if letter in self.key_buttons:
                 kc = self.key_colors[letter]
                 bg = self.colors[kc]
-                self.key_buttons[letter].configure(bg=bg, fg="#ffffff",
-                                                   activebackground=bg, activeforeground="#ffffff")
+                self.key_buttons[letter].configure(
+                    bg=bg, fg="#ffffff",
+                    activebackground=bg, activeforeground="#ffffff"
+                )
 
         # check win/loss
         if guess == self.target_word:
@@ -1053,27 +1082,6 @@ class WordleX:
         else:
             self.current_row += 1
             self.current_col = 0
-
-    def calculate_colors(self, guess, target):
-        colors = ["absent"] * 5
-        target_list = list(target)
-        guess_list = list(guess)
-
-        # first pass: correct
-        for i in range(5):
-            if guess_list[i] == target_list[i]:
-                colors[i] = "correct"
-                target_list[i] = None
-                guess_list[i] = None
-
-        # second pass: present
-        for i in range(5):
-            if guess_list[i] is not None:
-                if guess_list[i] in target_list:
-                    colors[i] = "present"
-                    target_list[target_list.index(guess_list[i])] = None
-
-        return colors
 
     # ========================
     # LANGUAGE METHODS

@@ -60,12 +60,12 @@
   ],
   "statistics": {
     "overall": {
-      "played": 98,
-      "wins": 88,
-      "current_streak": 5,
+      "played": 99,
+      "wins": 89,
+      "current_streak": 6,
       "max_streak": 40,
       "guess_distribution": {
-        "1": 34,
+        "1": 35,
         "2": 23,
         "3": 17,
         "4": 9,
@@ -229,12 +229,12 @@
         }
       },
       "a": {
-        "played": 26,
-        "wins": 22,
-        "current_streak": 3,
+        "played": 27,
+        "wins": 23,
+        "current_streak": 4,
         "max_streak": 13,
         "guess_distribution": {
-          "1": 11,
+          "1": 12,
           "2": 9,
           "3": 2,
           "4": 0,
