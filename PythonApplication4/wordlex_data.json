@@ -60,21 +60,21 @@
   ],
   "statistics": {
     "overall": {
-      "played": 100,
-      "wins": 90,
-      "current_streak": 7,
+      "played": 118,
+      "wins": 100,
+      "current_streak": 0,
       "max_streak": 40,
       "guess_distribution": {
-        "1": 35,
-        "2": 23,
-        "3": 18,
+        "1": 40,
+        "2": 25,
+        "3": 20,
         "4": 9,
-        "5": 3,
+        "5": 4,
         "6": 2
       }
     },
     "default": {
-      "played": 47,
+      "played": 48,
       "wins": 43,
       "current_streak": 0,
       "max_streak": 29,
@@ -89,16 +89,16 @@
     },
     "user_configs": {
       "test": {
-        "played": 22,
-        "wins": 21,
-        "current_streak": 11,
+        "played": 39,
+        "wins": 31,
+        "current_streak": 0,
         "max_streak": 11,
         "guess_distribution": {
-          "1": 8,
-          "2": 3,
-          "3": 6,
+          "1": 13,
+          "2": 5,
+          "3": 8,
           "4": 3,
-          "5": 0,
+          "5": 1,
           "6": 1
         }
       },
@@ -258,5 +258,5 @@
       }
     }
   },
-  "language": "ru"
+  "language": "en"
 }

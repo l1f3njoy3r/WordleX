@@ -51,7 +51,7 @@ BUILTIN_WORDS = [
     "glass", "glaze", "gleam", "glide", "gloom", "glory", "gloss", "glove", "going", "grace",
     "grade", "grain", "grand", "grant", "grape", "graph", "grasp", "grass", "grave", "great",
     "greed", "green", "greet", "grief", "grind", "groan", "groom", "gross", "group", "grove",
-    "grown", "guard", "guess", "guest", "guide", "guild", "guilt", "guise", "quite", "quota",
+    "grown", "guard", "guess", "guest", "guide", "guild", "guilt", "guise", "quite",
     "habit", "happy", "harsh", "haste", "haunt", "haven", "heart", "heavy", "hedge", "heist",
     "hence", "herbs", "hitch", "hobby", "holly", "honor", "horse", "hotel", "house", "human",
     "humor", "hurry", "hyper", "ideal", "image", "imply", "incur", "index", "indie", "infer",
@@ -144,7 +144,9 @@ def get_save_file_path():
 
     return os.path.join(app_dir, "wordlex_data.json")
 
-SAVE_FILE = get_save_file_path()
+#SAVE_FILE = get_save_file_path()
+
+SAVE_FILE = "wordlex_data.json"
 
 TRANSLATIONS = {
     "en": {
@@ -479,6 +481,7 @@ class WordleX:
         self.root.bind("<Escape>", self.on_escape)
         # width and height of the window output in the cmd
         # self.root.bind("<Configure>", lambda e: print(self.root.winfo_width(), self.root.winfo_height()))
+        #self.root.bind("<Configure>", lambda e: print(len(BUILTIN_WORDS)))
 
         # start a new game
         self.start_new_game()
@@ -834,7 +837,7 @@ class WordleX:
                     highlightthickness=2,
                     relief="flat",
                 )
-                tile_frame.pack(side="left", padx=3, pady=3)
+                tile_frame.pack(side="left", padx=3, pady=3) #6 px between tiles
                 tile_frame.pack_propagate(False)
 
                 lbl = tk.Label(
