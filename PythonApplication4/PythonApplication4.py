@@ -250,7 +250,7 @@ TRANSLATIONS = {
         "no_words": "No words yet. Add some above!",
         "word_must_5": "Word must be exactly 5 letters!",
         "word_in_list": "Word already in list!",
-        "checking": "Checking dictionary...",
+        "checking": "Checking the dictionary...",
         "word_added": "✅ '{word}' added!",
         "word_invalid": "❌ '{word}' is not a valid English word.",
         "rename_title": "Rename",
