@@ -51,51 +51,49 @@
       "FIGHT",
       "SIGHT"
     ],
-    "a": [
-      "CREAM"
-    ]
+    "a": []
   },
   "selected_user_lists": [
     "test"
   ],
   "statistics": {
     "overall": {
-      "played": 118,
-      "wins": 100,
-      "current_streak": 0,
+      "played": 123,
+      "wins": 105,
+      "current_streak": 5,
       "max_streak": 40,
       "guess_distribution": {
-        "1": 40,
-        "2": 25,
-        "3": 20,
-        "4": 9,
+        "1": 41,
+        "2": 26,
+        "3": 21,
+        "4": 11,
         "5": 4,
         "6": 2
       }
     },
     "default": {
-      "played": 48,
-      "wins": 43,
-      "current_streak": 0,
+      "played": 51,
+      "wins": 46,
+      "current_streak": 3,
       "max_streak": 29,
       "guess_distribution": {
         "1": 13,
         "2": 11,
-        "3": 9,
-        "4": 6,
+        "3": 10,
+        "4": 8,
         "5": 3,
         "6": 1
       }
     },
     "user_configs": {
       "test": {
-        "played": 39,
-        "wins": 31,
-        "current_streak": 0,
+        "played": 41,
+        "wins": 33,
+        "current_streak": 2,
         "max_streak": 11,
         "guess_distribution": {
-          "1": 13,
-          "2": 5,
+          "1": 14,
+          "2": 6,
           "3": 8,
           "4": 3,
           "5": 1,

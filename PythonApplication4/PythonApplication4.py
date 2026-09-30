@@ -1055,11 +1055,7 @@ class WordleX:
         return colors
 
     def _finalize_guess(self, guess):
-        """
-        Finishes processing the attempt after validating the word.
-        Called both from the main thread (local validation),
-        and from the background thread via self.root.after (API validation).
-        """
+        
         # calculate colors
         colors = self.calculate_colors(guess, self.target_word)
         self.board_colors[self.current_row] = colors
