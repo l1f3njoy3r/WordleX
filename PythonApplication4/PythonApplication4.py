@@ -10,6 +10,7 @@ import urllib.error
 import threading
 from PIL import Image, ImageDraw, ImageFont
 import copy
+import re
 
 # --- word list ---
 BUILTIN_WORDS = [
@@ -398,12 +399,26 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
 
+def get_defenition_wikitionary(word):
+    try:
+        url = f"https://en.wiktionary.org/api/rest_v1/page/definition/{word.lower()}"
+        req = urllib.request.Request(url, headers={"User-Agent": "WordleX/1.1 (https://github.com/l1f3njoy3r/WordleX)"})
+        data = json.loads(urllib.request.urlopen(req, timeout=5).read().decode())
+        for entry in data.get("en", []):
+            for d in entry.get("definitions", []):
+                text = re.sub(r"<[^>]+>", "", d.get("definition", "")).strip()
+                if text:
+                    return text
+    except Exception:
+        pass
+    return None
+
 
 def is_real_word_api(word):
     """Check if a word is a real English word using Free Dictionary API."""
     try:
         url = f"https://api.dictionaryapi.dev/api/v2/entries/en/{word.lower()}"
-        req = urllib.request.Request(url, headers={"User-Agent": "WordleX/1.0"})
+        req = urllib.request.Request(url, headers={"User-Agent": "WordleX/1.1 (https://github.com/l1f3njoy3r/WordleX)"})
         response = urllib.request.urlopen(req, timeout=5)
         if response.getcode() == 200:
             return True
@@ -418,7 +433,7 @@ def get_definition_api(word):
     """Get definition of a word using Free Dictionary API."""
     try:
         url = f"https://api.dictionaryapi.dev/api/v2/entries/en/{word.lower()}"
-        req = urllib.request.Request(url, headers={"User-Agent": "WordleX/1.0"})
+        req = urllib.request.Request(url, headers={"User-Agent": "WordleX/1.1 (https://github.com/l1f3njoy3r/WordleX)"})
         response = urllib.request.urlopen(req, timeout=5)
         data = json.loads(response.read().decode())
         if data and isinstance(data, list):
@@ -429,7 +444,8 @@ def get_definition_api(word):
                     return definitions[0].get("definition", "No definition found.")
         return "No definition found."
     except Exception:
-        return "Could not fetch definition."
+        pass
+    return get_defenition_wikitionary(word) or "Could not fetch definition."
 
 
 class WordleX:
@@ -2035,7 +2051,7 @@ class WordleX:
             "present": "🟨",
             "absent": "⬛",
         }
-        today = datetime.date.today().strftime("%Y-%m-%d")
+        today = datetime.date.today().strftime("%d-%m-%Y")
         rows = len(self.game_history_for_share)
         score = f"{'X' if not self.game_won else rows}/6"
 
@@ -2092,7 +2108,7 @@ class WordleX:
             font_letter = ImageFont.load_default()
 
         # --- title ---
-        today = datetime.date.today().strftime("%Y-%m-%d")
+        today = datetime.date.today().strftime("%d-%m-%Y")
         score = f"{'X' if not self.game_won else rows}/6"
         title_text = f"WordleX  {today}  {score}"
         bbox = draw.textbbox((0, 0), title_text, font=font_title)
